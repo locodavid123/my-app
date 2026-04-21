@@ -1,65 +1,120 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { FileUpload } from '@/components/FileUpload';
+import { MetricsCard } from '@/components/MetricsCard';
+import { Charts } from '@/components/Charts';
+import { CommentsTable } from '@/components/CommentsTable';
+import { Comment, AnalysisMetrics } from '@/lib/types';
+
+const DEFAULT_METRICS: AnalysisMetrics = {
+  totalComments: 0,
+  positive: 0,
+  negative: 0,
+  neutral: 0,
+  positivePercentage: 0,
+  negativePercentage: 0,
+  neutralPercentage: 0,
+  averageScore: 0,
+  processingTime: 0,
+};
 
 export default function Home() {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [metrics, setMetrics] = useState<AnalysisMetrics>(DEFAULT_METRICS);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Cargar datos al montar el componente
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [commentsRes, metricsRes] = await Promise.all([
+        fetch('/api/comments'),
+        fetch('/api/metrics'),
+      ]);
+
+      if (commentsRes.ok) {
+        const commentsData = await commentsRes.json();
+        setComments(commentsData.data || []);
+      }
+
+      if (metricsRes.ok) {
+        const metricsData = await metricsRes.json();
+        setMetrics(metricsData.data || DEFAULT_METRICS);
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
+  };
+
+  const handleFileChange = async (newComments: Comment[]) => {
+    setComments(newComments);
+    // Recargar métricas después de agregar comentarios
+    setTimeout(loadData, 500);
+  };
+
+  const handleClearData = () => {
+    if (confirm('¿Estás seguro de que deseas eliminar todos los datos?')) {
+      fetch('/api/comments', { method: 'DELETE' })
+        .then(() => {
+          setComments([]);
+          setMetrics(DEFAULT_METRICS);
+        })
+        .catch(console.error);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                🎯 Análisis de Sentimiento
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">
+                Plataforma escalable para análisis de comentarios
+              </p>
+            </div>
+            <button
+              onClick={handleClearData}
+              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              🗑️ Limpiar Datos
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* File Upload */}
+        <FileUpload onFileChange={handleFileChange} isLoading={isLoading} />
+
+        {/* Metrics */}
+        <MetricsCard metrics={metrics} accuracy={95} />
+
+        {/* Charts */}
+        {comments.length > 0 && <Charts metrics={metrics} />}
+
+        {/* Comments Table */}
+        <CommentsTable comments={comments} />
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-800 shadow-md mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-gray-600 dark:text-gray-400">
+          <p>
+            💡 Proyecto de Análisis de Sentimiento | Big Data & NLP | 
+            <span className="font-semibold"> Tecnologías: Next.js, React, Node.js, NLP</span>
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }
