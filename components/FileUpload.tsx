@@ -60,8 +60,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+    <div className="bg-slate-50/50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 mb-6 shadow-sm">
+      <h2 className="text-xl font-bold mb-4 text-slate-800 dark:text-slate-100">
         📁 Cargar Comentarios
       </h2>
       
@@ -69,7 +69,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={isLoading}
-          className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+          className="flex-1 px-4 py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-slate-400 text-white rounded-xl transition-all active:scale-95 font-bold shadow-lg hover:shadow-sky-500/30"
         >
           {isLoading ? '⏳ Cargando...' : '📤 Cargar CSV'}
         </button>
@@ -77,7 +77,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         <button
           onClick={handleManualInput}
           disabled={isLoading}
-          className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+          className="flex-1 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-400 text-white rounded-xl transition-all active:scale-95 font-bold shadow-lg hover:shadow-emerald-500/30"
         >
           ✏️ Agregar Manual
         </button>

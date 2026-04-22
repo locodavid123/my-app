@@ -39,19 +39,19 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case 'positive':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        return 'bg-emerald-500 text-white shadow-sm shadow-emerald-200';
       case 'negative':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+        return 'bg-rose-500 text-white shadow-sm shadow-rose-200';
       case 'neutral':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+        return 'bg-slate-400 text-white shadow-sm shadow-slate-200';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-      <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
+    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl shadow-slate-200/60 dark:shadow-none border border-slate-100 dark:border-slate-800">
+      <h3 className="text-lg font-bold mb-4 text-slate-800 dark:text-slate-100">
         💬 Comentarios Procesados
       </h3>
 

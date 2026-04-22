@@ -68,13 +68,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-md">
+      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">
                 🎯 Análisis de Sentimiento
               </h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -83,7 +83,7 @@ export default function Home() {
             </div>
             <button
               onClick={handleClearData}
-              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
+              className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-lg transition-all shadow-md active:scale-95 text-sm font-bold"
             >
               🗑️ Limpiar Datos
             </button>

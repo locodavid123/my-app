@@ -22,22 +22,22 @@ interface ChartsProps {
 
 export const Charts: React.FC<ChartsProps> = ({ metrics }) => {
   const sentimentData = [
-    { name: 'Positivos', value: metrics.positive, fill: '#10b981' },
-    { name: 'Negativos', value: metrics.negative, fill: '#ef4444' },
-    { name: 'Neutrales', value: metrics.neutral, fill: '#9ca3af' },
+    { name: 'Positivos', value: metrics.positive, fill: '#A7F3D0' },
+    { name: 'Negativos', value: metrics.negative, fill: '#FECACA' },
+    { name: 'Neutrales', value: metrics.neutral, fill: '#E5E7EB' },
   ];
 
   const percentageData = [
-    { name: 'Positivos', value: metrics.positivePercentage, fill: '#10b981' },
-    { name: 'Negativos', value: metrics.negativePercentage, fill: '#ef4444' },
-    { name: 'Neutrales', value: metrics.neutralPercentage, fill: '#9ca3af' },
+    { name: 'Positivos', value: metrics.positivePercentage, fill: '#A7F3D0' },
+    { name: 'Negativos', value: metrics.negativePercentage, fill: '#FECACA' },
+    { name: 'Neutrales', value: metrics.neutralPercentage, fill: '#E5E7EB' },
   ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       {/* Pie Chart */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
+        <h3 className="text-lg font-bold mb-4 text-slate-800 dark:text-slate-100">
           📊 Distribución de Sentimientos
         </h3>
         <ResponsiveContainer width="100%" height={300}>
@@ -63,8 +63,8 @@ export const Charts: React.FC<ChartsProps> = ({ metrics }) => {
       </div>
 
       {/* Bar Chart */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
+        <h3 className="text-lg font-bold mb-4 text-slate-800 dark:text-slate-100">
           📈 Porcentaje por Sentimiento
         </h3>
         <ResponsiveContainer width="100%" height={300}>
