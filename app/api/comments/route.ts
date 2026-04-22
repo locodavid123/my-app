@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Papa from 'papaparse';
+import * as Papa from 'papaparse';
 import { readComments, addComments } from '@/lib/utils/storage';
 import { analyzeTexts } from '@/lib/ml/sentiment-analyzer';
 
