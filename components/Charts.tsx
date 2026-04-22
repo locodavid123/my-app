@@ -22,15 +22,15 @@ interface ChartsProps {
 
 export const Charts: React.FC<ChartsProps> = ({ metrics }) => {
   const sentimentData = [
-    { name: 'Positivos', value: metrics.positive, fill: '#A7F3D0' },
-    { name: 'Negativos', value: metrics.negative, fill: '#FECACA' },
-    { name: 'Neutrales', value: metrics.neutral, fill: '#E5E7EB' },
+    { name: 'Positivos', value: metrics.positive, fill: '#10b981' },
+    { name: 'Negativos', value: metrics.negative, fill: '#f43f5e' },
+    { name: 'Neutrales', value: metrics.neutral, fill: '#94a3b8' },
   ];
 
   const percentageData = [
-    { name: 'Positivos', value: metrics.positivePercentage, fill: '#A7F3D0' },
-    { name: 'Negativos', value: metrics.negativePercentage, fill: '#FECACA' },
-    { name: 'Neutrales', value: metrics.neutralPercentage, fill: '#E5E7EB' },
+    { name: 'Positivos', value: metrics.positivePercentage, fill: '#10b981' },
+    { name: 'Negativos', value: metrics.negativePercentage, fill: '#f43f5e' },
+    { name: 'Neutrales', value: metrics.neutralPercentage, fill: '#94a3b8' },
   ];
 
   return (
@@ -72,7 +72,12 @@ export const Charts: React.FC<ChartsProps> = ({ metrics }) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
-            <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
+            <Tooltip
+              formatter={(value) => {
+                if (typeof value === 'number') return `${value.toFixed(1)}%`;
+                return value;
+              }}
+            />
             <Bar dataKey="value" radius={[8, 8, 0, 0]}>
               {percentageData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />

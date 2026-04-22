@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { parse } from 'papaparse';
 import { readComments, addComments } from '@/lib/utils/storage';
 import { analyzeTexts } from '@/lib/ml/sentiment-analyzer';
+import { Comment } from '@/lib/types';
 
 /**
  * GET /api/comments - Obtiene todos los comentarios
@@ -31,7 +32,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    let commentsToAdd = [];
+    let commentsToAdd: Comment[] = [];
 
     // Procesar CSV
     if (body.csv) {
