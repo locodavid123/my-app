@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import * as Papa from 'papaparse';
+import { parse } from 'papaparse';
 import { readComments, addComments } from '@/lib/utils/storage';
 import { analyzeTexts } from '@/lib/ml/sentiment-analyzer';
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     // Procesar CSV
     if (body.csv) {
-      const results = Papa.parse(body.csv, {
+      const results = parse(body.csv, {
         header: true,
         skipEmptyLines: true,
       });
