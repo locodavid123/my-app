@@ -89,9 +89,16 @@ Desarrollar una plataforma automatizada que:
 
 ## 3. Explicación del Modelo
 
-### 3.1 Algoritmo de Clasificación de Sentimiento
+### 3.1 El Motor NLP: Librería "natural"
 
-El proyecto implementa un clasificador entrenado con **Machine Learning (Naive Bayes)** mediante la librería `natural`:
+Para dotar a la aplicación de capacidad de entendimiento de texto, se utiliza **`natural`**, un módulo especializado en el procesamiento de lenguaje natural (NLP) para el ecosistema de Node.js. En este proyecto, esta librería se encarga de tres tareas fundamentales:
+1. **Clasificación (Machine Learning)**: Proporciona la infraestructura matemática lista para usar, específicamente el algoritmo de clasificación probabilística `BayesClassifier`.
+2. **Derivación Léxica (Stemming)**: A través del módulo `PorterStemmerEs`, se encarga de recortar las palabras en español hasta su raíz (por ejemplo, "excelente" y "excelencia" se reducen a "excelent"). Esto ayuda enormemente a que el modelo identifique patrones sin verse afectado por las distintas conjugaciones gramaticales.
+3. **Tokenización**: Limpia y divide oraciones enteras en piezas individuales (tokens) ignorando signos de puntuación, permitiendo que el clasificador evalúe palabra por palabra.
+
+### 3.2 Algoritmo de Clasificación de Sentimiento
+
+El proyecto implementa un clasificador entrenado con **Machine Learning (Naive Bayes)**:
 
 ```
 1. ENTRENAMIENTO PREVIO (Training)
@@ -112,7 +119,32 @@ El proyecto implementa un clasificador entrenado con **Machine Learning (Naive B
    - Retorna la etiqueta y el nivel de confianza algorítmica.
 ```
 
-### 3.2 Fórmulas de Cálculo
+### 3.3 Proceso de Entrenamiento del Modelo
+
+El entrenamiento del modelo de Machine Learning se realiza a través de un script dedicado (`scripts/train-model.mjs`), el cual prepara y educa al clasificador antes de ser utilizado en la aplicación principal. El proceso detallado es el siguiente:
+
+1. **Selección del Clasificador y Stemmer**:
+   - Se instancia un `BayesClassifier` de la librería `natural`.
+   - Se configura para utilizar `PorterStemmerEs`, un algoritmo de derivación (stemming) específico para el idioma español. Esto permite reducir las palabras a su raíz léxica (ej. "bueno", "buenísima" -> "buen"), lo que consolida los términos y mejora la precisión del modelo sin importar conjugaciones.
+
+2. **Preparación del Dataset de Entrenamiento**:
+   - Se define un conjunto de datos inicial curado manualmente (`trainData`) con ejemplos representativos de comentarios en español, clasificados en tres categorías clave (etiquetas):
+     - **Positivos**: Expresiones de satisfacción, calidad y buen servicio (ej. "Excelente producto, me encanta", "Maravilloso, superó mis expectativas").
+     - **Negativos**: Quejas, fallas y decepciones (ej. "Terrible calidad, se rompió rápido", "Una pérdida de dinero, es basura").
+     - **Neutrales**: Comentarios intermedios o puramente descriptivos (ej. "Es aceptable, cumple su función", "Normal, ni excelente ni terrible").
+   - El dataset balancea ejemplos claros y variados de cada categoría para proporcionar un marco de referencia robusto.
+
+3. **Ingesta de Datos (Feeding)**:
+   - El script recorre iterativamente el corpus y añade cada frase junto a su etiqueta al clasificador mediante el método `addDocument()`. Internamente, cada documento pasa por el proceso de stemming y tokenización.
+
+4. **Entrenamiento Matemático (Training)**:
+   - Al invocar `classifier.train()`, el algoritmo Naive Bayes analiza la distribución de frecuencia de los tokens para cada etiqueta. Construye las tablas de probabilidades condicionales que se usarán en las predicciones futuras.
+
+5. **Persistencia del Modelo**:
+   - Finalmente, toda la red probabilística calculada ("el cerebro" del modelo) se exporta y guarda físicamente en formato JSON en el archivo `data/trained-model.json`.
+   - **Ventaja**: Este enfoque de "entrenamiento anticipado" (Ahead-of-Time Training) permite que la aplicación principal cargue el modelo de forma instantánea al procesar comentarios, evitando la costosa tarea computacional de reentrenar la máquina en cada petición web.
+
+### 3.4 Fórmulas de Cálculo
 
 ```
 CONFIANZA = |score| 
@@ -126,12 +158,12 @@ ACCURACY ≈ 91%
 (Aproximación teórica para clasificadores Naive Bayes en textos cortos)
 ```
 
-### 3.3 Limitaciones del Modelo
+### 3.5 Limitaciones del Modelo
 
 - **Análisis léxico**: No detecta sarcasmo
-- **Contexto**: No entiende significado completo
-- **Idioma**: Limitado principalmente a inglés
-- **Emojis**: No reconoce información emocional de caracteres especiales
+- **Contexto**: No entiende el significado completo de construcciones irónicas o frases complejas
+- **Idioma**: Optimizado específicamente para español (no evaluará correctamente textos en inglés u otros idiomas)
+- **Emojis**: No reconoce la información emocional que aportan los caracteres especiales o emojis
 
 ---
 
@@ -327,9 +359,9 @@ Para una base de 100 comentarios:
 ### 9.1 Limitaciones Actuales
 
 1. **Base de datos**: Usa JSON en archivos (no escala a millones)
-2. **Análisis**: Solo en inglés principalmente
+2. **Análisis**: Solo en español principalmente
 3. **Sarcasmo**: No se detecta correctamente
-4. **Multiidioma**: Requiere modelos específicos por idioma
+4. **Multiidioma**: Requiere reentrenar modelos específicos por idioma
 
 ### 9.2 Mejoras Futuras (Roadmap)
 

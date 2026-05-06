@@ -44,15 +44,22 @@ export function classifySentiment(
   try {
     sentiment = model.classify(text) as 'positive' | 'negative' | 'neutral';
     const classifications = model.getClassifications(text);
+    
+    // La librería 'natural' devuelve probabilidades conjuntas muy pequeñas.
+    // Para obtener un porcentaje de confianza real (0 a 1), normalizamos los valores:
+    const totalValue = classifications.reduce((sum, c) => sum + c.value, 0);
     const topClassification = classifications.find(c => c.label === sentiment);
-    confidenceScore = topClassification ? topClassification.value : 0;
+    
+    confidenceScore = (totalValue > 0 && topClassification) ? (topClassification.value / totalValue) : 0;
   } catch (e) {
     console.error("Error en clasificación ML:", e);
   }
 
+  // Asignar el score basado en el sentimiento y la confianza normalizada
   let score = 0;
-  if (sentiment === 'positive') score = Math.min(1, confidenceScore * 10);
-  else if (sentiment === 'negative') score = Math.max(-1, -(confidenceScore * 10));
+  if (sentiment === 'positive') score = confidenceScore; // 0 a 1
+  else if (sentiment === 'negative') score = -confidenceScore; // -1 a 0
+  else score = 0; // Neutral es 0
 
   return {
     sentiment,
