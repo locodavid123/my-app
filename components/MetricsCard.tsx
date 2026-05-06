@@ -2,6 +2,13 @@
 
 import React from 'react';
 import { AnalysisMetrics } from '@/lib/types';
+import { 
+  ChartBarIcon, 
+  FaceSmileIcon, 
+  FaceFrownIcon, 
+  ScaleIcon, 
+  SparklesIcon 
+} from '@heroicons/react/24/solid';
 
 interface MetricsCardProps {
   metrics: AnalysisMetrics;
@@ -16,7 +23,7 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
     {
       label: 'Total Procesados',
       value: metrics.totalComments,
-      icon: '📊',
+      icon: <ChartBarIcon className="w-6 h-6 text-white" />,
       bgColor: 'bg-gradient-to-br from-blue-500 to-blue-700',
       shadowColor: 'shadow-blue-200',
     },
@@ -24,7 +31,7 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
       label: 'Positivos',
       value: metrics.positive,
       percentage: metrics.positivePercentage.toFixed(1),
-      icon: '😊',
+      icon: <FaceSmileIcon className="w-6 h-6 text-emerald-500" />,
       bgColor: 'bg-gradient-to-br from-emerald-500 to-teal-600',
       shadowColor: 'shadow-emerald-200',
     },
@@ -32,7 +39,7 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
       label: 'Negativos',
       value: metrics.negative,
       percentage: metrics.negativePercentage.toFixed(1),
-      icon: '😞',
+      icon: <FaceFrownIcon className="w-6 h-6 text-rose-500" />,
       bgColor: 'bg-gradient-to-br from-rose-500 to-red-600',
       shadowColor: 'shadow-rose-200',
     },
@@ -40,42 +47,49 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
       label: 'Neutrales',
       value: metrics.neutral,
       percentage: metrics.neutralPercentage.toFixed(1),
-      icon: '😐',
+      icon: <ScaleIcon className="w-6 h-6 text-slate-500" />,
       bgColor: 'bg-gradient-to-br from-slate-500 to-slate-700',
       shadowColor: 'shadow-slate-200',
     },
     {
       label: 'Accuracy',
       value: `${accuracy}%`,
-      icon: '✅',
+      icon: <SparklesIcon className="w-6 h-6 text-violet-500" />,
       bgColor: 'bg-gradient-to-br from-violet-500 to-purple-700',
       shadowColor: 'shadow-violet-200',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
       {cards.map((card, idx) => (
         <div
           key={idx}
-          className={`${card.bgColor} p-5 rounded-2xl shadow-lg ${card.shadowColor} transition-all hover:scale-105 hover:-translate-y-1 border border-white/10`}
+          className="group relative p-6 rounded-3xl bg-white border border-slate-200/80 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-slate-300"
         >
-          <div className="flex items-center justify-between mb-2">
-            <div className="p-2 rounded-xl bg-white/20 backdrop-blur-md text-2xl shadow-inner">
+          {/* Resplandor decorativo (Light) */}
+          <div className={`absolute -right-12 -top-12 w-40 h-40 rounded-full blur-[50px] opacity-[0.15] group-hover:opacity-[0.25] transition-opacity duration-500 ${card.bgColor}`} />
+          
+          <div className="flex items-center justify-between mb-6 relative z-10">
+            <div className={`w-12 h-12 flex items-center justify-center rounded-2xl ${card.bgColor} bg-opacity-[0.15] border border-white shadow-sm text-2xl`}>
               {card.icon}
             </div>
-            <p className="text-xs font-bold uppercase tracking-wider text-white/80">
+          </div>
+          
+          <div className="relative z-10 flex flex-col gap-1">
+            <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 group-hover:text-slate-500 transition-colors">
               {card.label}
             </p>
-          </div>
-          <div className="text-3xl font-black text-white mt-2">
-            {card.value}
-          </div>
-          {card.percentage && (
-            <div className="text-sm font-bold text-white/70 mt-1">
-              {card.percentage}% del total
+            <div className="text-4xl font-black text-slate-800 tracking-tight">
+              {card.value}
             </div>
-          )}
+            {card.percentage && (
+              <div className="text-xs font-bold text-slate-500 mt-2 flex items-center gap-2">
+                <span className={`w-1.5 h-1.5 rounded-full ${card.bgColor} shadow-sm`} />
+                {card.percentage}% del total
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>

@@ -41,6 +41,30 @@ const trainData = [
   { text: 'Súper recomendado, es de las mejores compras del año', label: 'positive' },
   { text: 'El tamaño es perfecto y el material resistente', label: 'positive' },
   { text: 'Buen producto, lo uso en el trabajo y va bien', label: 'positive' },
+  { text: 'Esta excelente', label: 'positive' },
+  { text: 'muy bien hecho', label: 'positive' },
+  { text: 'Esta bien hecho', label: 'positive' },
+  { text: 'Buenísimo, recomendado', label: 'positive' },
+  
+  // PALABRAS CLAVE DIRECTAS (Para forzar peso positivo)
+  { text: 'bien', label: 'positive' },
+  { text: 'muy bien', label: 'positive' },
+  { text: 'todo bien', label: 'positive' },
+  { text: 'ok', label: 'positive' },
+  { text: 'fenomenal', label: 'positive' },
+  { text: 'esta fenomenal', label: 'positive' },
+  { text: 'super', label: 'positive' },
+  { text: 'genial', label: 'positive' },
+  
+  // SLANG Y EXPRESIONES COLOMBIANAS POSITIVAS
+  { text: 'que epico', label: 'positive' },
+  { text: 'epico', label: 'positive' },
+  { text: 'una chimba', label: 'positive' },
+  { text: 're chimba', label: 'positive' },
+  { text: 'que elegancia', label: 'positive' },
+  { text: 'melos', label: 'positive' },
+  { text: 'firme socio', label: 'positive' },
+  { text: 'severo', label: 'positive' },
 
   // NEGATIVOS
   { text: 'Terrible calidad, se rompió rápido', label: 'negative' },
@@ -71,20 +95,37 @@ const trainData = [
   { text: 'No funciona bien, se traba constantemente', label: 'negative' },
   { text: 'Un asco, huele raro y los acabados son pésimos', label: 'negative' },
   { text: 'Decepcionado, el manual es incomprensible', label: 'negative' },
+  { text: 'Esta remal', label: 'negative' },
+  { text: 're mal', label: 'negative' },
+  { text: 'muy mal hecho', label: 'negative' },
+  { text: 'no sirve para nada', label: 'negative' },
 
-  // NEUTRALES
+  // SLANG Y EXPRESIONES COLOMBIANAS NEGATIVAS
+  { text: 'que video tan re paila socio', label: 'negative' },
+  { text: 're paila', label: 'negative' },
+  { text: 'paila', label: 'negative' },
+  { text: 'que video tan malo', label: 'negative' },
+  { text: 'gonorrea', label: 'negative' },
+  { text: 'que gorrea', label: 'negative' },
+  { text: 'que picho', label: 'negative' },
+  { text: 'picho', label: 'negative' },
+  { text: 'una porqueria', label: 'negative' },
+  { text: 'que basura', label: 'negative' },
+  { text: 'asqueroso', label: 'negative' },
+
+  // NEUTRALES (Limpiados de palabras positivas)
   { text: 'Es aceptable, cumple su función', label: 'neutral' },
   { text: 'No está mal, pero podría ser mejor', label: 'neutral' },
   { text: 'Producto promedio, nada especial', label: 'neutral' },
-  { text: 'Llegó bien, es lo que esperaba', label: 'neutral' },
-  { text: 'Ok, funciona de manera normal', label: 'neutral' },
+  { text: 'Llegó en su caja, es lo que esperaba', label: 'neutral' },
+  { text: 'Funciona de manera normal', label: 'neutral' },
   { text: 'Normal, ni fu ni fa', label: 'neutral' },
   { text: 'Lo uso a diario', label: 'neutral' },
   { text: 'regular promedio aceptable', label: 'neutral' },
-  { text: 'ni bien ni mal', label: 'neutral' },
+  { text: 'mas o menos', label: 'neutral' },
   { text: 'Producto decente para el precio', label: 'neutral' },
   { text: 'Producto decente', label: 'neutral' },
-  { text: 'Está bien, nada especial', label: 'neutral' },
+  { text: 'Pasable, nada especial', label: 'neutral' },
   { text: 'Producto promedio, hace lo que dice', label: 'neutral' },
   { text: 'Cumple su función, pero podría ser mejor', label: 'neutral' },
   { text: 'Es un producto aceptable, no destaca', label: 'neutral' },
@@ -94,6 +135,13 @@ const trainData = [
   { text: 'Normal, ni excelente ni terrible', label: 'neutral' },
   { text: 'No está mal, lo recomendaría a medias', label: 'neutral' },
   { text: 'Sorprendentemente bueno para ser tan económico', label: 'neutral' }, // Ambiguo, mejor como neutral
+  { text: 'buenos dias', label: 'neutral' },
+  { text: 'buenas tardes', label: 'neutral' },
+  { text: 'hola', label: 'neutral' },
+  { text: 'un saludo', label: 'neutral' },
+  { text: 'que mas', label: 'neutral' },
+  { text: 'ahi mas o menos', label: 'neutral' },
+  { text: 'todo normal', label: 'neutral' },
 ];
 
 // Añadir todo al modelo
