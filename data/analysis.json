@@ -119,17 +119,137 @@
       "score": -0.0017615713216188832,
       "confidence": 0.0001761571321618883,
       "timestamp": "2026-05-06T18:01:07.521Z"
+    },
+    {
+      "id": "comment-1778090735344-0",
+      "text": "¡Este producto es increíble! Me encanta muchísimo",
+      "sentiment": "positive",
+      "score": 0.0014467592592592592,
+      "confidence": 0.00014467592592592592,
+      "timestamp": "2026-05-06T18:05:35.344Z"
+    },
+    {
+      "id": "comment-1778090735345-1",
+      "text": "Terrible experiencia, una pérdida de dinero",
+      "sentiment": "negative",
+      "score": -0.006605892456070813,
+      "confidence": 0.0006605892456070814,
+      "timestamp": "2026-05-06T18:05:35.345Z"
+    },
+    {
+      "id": "comment-1778090735345-2",
+      "text": "Está bien, nada especial",
+      "sentiment": "neutral",
+      "score": 0,
+      "confidence": 0.0011478420569329651,
+      "timestamp": "2026-05-06T18:05:35.345Z"
+    },
+    {
+      "id": "comment-1778090735345-3",
+      "text": "¡La mejor compra que he hecho!",
+      "sentiment": "positive",
+      "score": 0.0002712673611111109,
+      "confidence": 0.00002712673611111109,
+      "timestamp": "2026-05-06T18:05:35.345Z"
+    },
+    {
+      "id": "comment-1778090735345-4",
+      "text": "Muy decepcionado con la calidad",
+      "sentiment": "negative",
+      "score": -0.07662835249042142,
+      "confidence": 0.007662835249042142,
+      "timestamp": "2026-05-06T18:05:35.345Z"
+    },
+    {
+      "id": "comment-1778090735345-5",
+      "text": "Producto promedio, hace lo que dice",
+      "sentiment": "neutral",
+      "score": 0,
+      "confidence": 0.0001298568791681739,
+      "timestamp": "2026-05-06T18:05:35.345Z"
+    },
+    {
+      "id": "comment-1778090735346-6",
+      "text": "¡Servicio absolutamente fantástico!",
+      "sentiment": "positive",
+      "score": 0.023148148148148154,
+      "confidence": 0.0023148148148148156,
+      "timestamp": "2026-05-06T18:05:35.346Z"
+    },
+    {
+      "id": "comment-1778090735346-7",
+      "text": "Horrible, la peor decisión",
+      "sentiment": "negative",
+      "score": -0.05108556832694765,
+      "confidence": 0.005108556832694765,
+      "timestamp": "2026-05-06T18:05:35.346Z"
+    },
+    {
+      "id": "comment-1778090735346-8",
+      "text": "No está mal, lo recomendaría",
+      "sentiment": "neutral",
+      "score": 0,
+      "confidence": 0.004489337822671155,
+      "timestamp": "2026-05-06T18:05:35.346Z"
+    },
+    {
+      "id": "comment-1778090735346-9",
+      "text": "Asqueroso, odio esto",
+      "sentiment": "negative",
+      "score": -0.0035231426432377672,
+      "confidence": 0.00035231426432377674,
+      "timestamp": "2026-05-06T18:05:35.346Z"
+    },
+    {
+      "id": "comment-1778090735346-10",
+      "text": "¡Perfecto! Exactamente lo que necesitaba",
+      "sentiment": "positive",
+      "score": 0.002893518518518519,
+      "confidence": 0.0002893518518518519,
+      "timestamp": "2026-05-06T18:05:35.346Z"
+    },
+    {
+      "id": "comment-1778090735346-11",
+      "text": "Decepcionante y muy caro",
+      "sentiment": "negative",
+      "score": -0.05108556832694765,
+      "confidence": 0.005108556832694765,
+      "timestamp": "2026-05-06T18:05:35.346Z"
+    },
+    {
+      "id": "comment-1778090735347-12",
+      "text": "Producto decente para el precio",
+      "sentiment": "neutral",
+      "score": 0,
+      "confidence": 0.0010713192531374347,
+      "timestamp": "2026-05-06T18:05:35.347Z"
+    },
+    {
+      "id": "comment-1778090735347-13",
+      "text": "¡Excelente atención al cliente!",
+      "sentiment": "positive",
+      "score": 0.04629629629629631,
+      "confidence": 0.004629629629629631,
+      "timestamp": "2026-05-06T18:05:35.347Z"
+    },
+    {
+      "id": "comment-1778090735347-14",
+      "text": "Pésima experiencia de principio a fin",
+      "sentiment": "negative",
+      "score": -0.0017615713216188832,
+      "confidence": 0.0001761571321618883,
+      "timestamp": "2026-05-06T18:05:35.347Z"
     }
   ],
   "metrics": {
-    "totalComments": 15,
-    "positive": 5,
-    "negative": 6,
-    "neutral": 4,
+    "totalComments": 30,
+    "positive": 10,
+    "negative": 12,
+    "neutral": 8,
     "positivePercentage": 33.33333333333333,
     "negativePercentage": 40,
     "neutralPercentage": 26.666666666666668,
-    "averageScore": -0.007775607065460721,
-    "processingTime": 14.170799999999872
+    "averageScore": -0.007775607065460723,
+    "processingTime": 18.938500000000204
   }
 }
