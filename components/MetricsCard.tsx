@@ -10,7 +10,7 @@ interface MetricsCardProps {
 
 export const MetricsCard: React.FC<MetricsCardProps> = ({ 
   metrics,
-  accuracy = 95 
+  accuracy = 91 
 }) => {
   const cards = [
     {

@@ -124,12 +124,12 @@ df.to_csv('clean_comments.csv', index=False)
 
 ```csv
 comment
-"Amazing quality and fast shipping!"
-"Poor packaging, item arrived damaged"
-"Good value for money"
-"Excellent customer service"
-"Waste of money, stopped working after 2 days"
-"Decent product, average performance"
+"Calidad asombrosa y envío rápido!"
+"Empaque deficiente, llegó dañado"
+"Buena relación calidad-precio"
+"Excelente servicio al cliente"
+"Pérdida de dinero, se rompió en 2 días"
+"Producto decente, rendimiento promedio"
 ```
 
 **Resultados esperados:**
@@ -141,12 +141,12 @@ comment
 
 ```csv
 text
-"Just had the best pizza ever! 🍕😍"
-"This movie is absolute trash 💔"
-"Today was okay I guess"
-"I love my new job, so excited!"
-"Terrible weather today"
-"Just an ordinary Thursday"
+"Acabo de comer la mejor pizza! 🍕😍"
+"Esta película es pura basura 💔"
+"Hoy estuvo bien supongo"
+"Amo mi nuevo trabajo, muy emocionado!"
+"Clima terrible hoy"
+"Solo un jueves común y corriente"
 ```
 
 **Resultados esperados:**
@@ -176,9 +176,9 @@ text
 
 ```javascript
 const comments = [
-  "Great product",
-  "Not good",
-  "Average"
+  "Excelente producto",
+  "No es bueno",
+  "Promedio"
 ];
 
 const response = await fetch('http://localhost:3000/api/comments', {
@@ -196,12 +196,11 @@ console.log(result);
 ## 7. Consideraciones Importantes
 
 ### 7.1 Idioma
-⚠️ El modelo funciona mejor con **texto en inglés**
+⚠️ El modelo funciona exclusivamente con **texto en Español**, ya que fue entrenado con un corpus en español utilizando `natural.PorterStemmerEs`.
 
 Para otros idiomas:
-- Español: ~75% accuracy
-- Francés: ~70% accuracy
-- Otros: No garantizado
+- Inglés: No detectará correctamente las raíces de las palabras.
+- Otros: Resultados impredecibles o neutrales.
 
 ### 7.2 Longitud de Texto
 - **Óptimo**: 10-50 palabras
@@ -238,8 +237,8 @@ Accuracy = (Correctos / Total) × 100
 
 Ejemplo:
 - Total comentarios: 100
-- Correctos: 95
-- Accuracy = (95/100) × 100 = 95%
+- Correctos: 91
+- Accuracy = (91/100) × 100 = 91%
 ```
 
 ---
@@ -269,7 +268,7 @@ Los resultados se almacenan en:
 ```json
 {
   "id": "comment-1713700245000-0",
-  "text": "This is amazing!",
+  "text": "¡Esto es increíble!",
   "sentiment": "positive",
   "score": 0.85,
   "confidence": 0.85,
@@ -288,8 +287,8 @@ Los resultados se almacenan en:
   "negativePercentage": 31.0,
   "neutralPercentage": 27.0,
   "averageScore": 0.12,
-  "processingTime": 0,
-  "accuracy": 95
+  "processingTime": 14.5,
+  "accuracy": 91
 }
 ```
 
@@ -305,8 +304,8 @@ Los resultados se almacenan en:
 ### ❌ Resultados siempre neutrales
 
 **Solución**: 
-- Verificar que el texto contenga palabras en inglés
-- Revisa si hay errores de ortografía
+- Verificar que el texto contenga palabras en español y que estén en el dataset de entrenamiento.
+- Revisa si hay errores ortográficos severos que el stemmer no pueda resolver.
 
 ### ❌ Archivo no se carga
 

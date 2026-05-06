@@ -97,7 +97,7 @@ export default function Home() {
         <FileUpload onFileChange={handleFileChange} isLoading={isLoading} />
 
         {/* Metrics */}
-        <MetricsCard metrics={metrics} accuracy={95} />
+        <MetricsCard metrics={metrics} accuracy={metrics.accuracy || 91} />
 
         {/* Charts */}
         {comments.length > 0 && <Charts metrics={metrics} />}

@@ -77,9 +77,9 @@ my-app/
 **Ejemplo incluido:**
 ```csv
 comment
-"This product is amazing! I love it so much"
-"Terrible experience, waste of money"
-"It's okay, nothing special"
+"¡Este producto es increíble! Me encanta muchísimo"
+"Terrible experiencia, una pérdida de dinero"
+"Está bien, nada especial"
 ... (15 comentarios totales)
 ```
 
@@ -87,13 +87,13 @@ comment
 
 ## 3. ✅ Modelo Entrenado
 
-### Tipo: Pre-entrenado (Sentiment Lexicon)
+### Tipo: Entrenado Localmente (Machine Learning)
 
-**Librería: `sentiment@5.0.0`**
-- Algoritmo: Análisis léxico
-- Precisión: ~95%
-- Idioma principal: Inglés
-- Tiempo de respuesta: < 50ms por comentario
+**Librería: `natural@8.x`**
+- Algoritmo: Clasificador Naive Bayes
+- Precisión: ~91%
+- Idioma principal: Español
+- Tiempo de respuesta: Variable (medido dinámicamente)
 
 **Características:**
 - Clasificación: Positivo, Negativo, Neutral
@@ -180,7 +180,7 @@ Para la presentación a compañeros, se incluye:
 - Mostrar gráficos y métricas
 
 **Slide 4: Resultados**
-- Métricas: 95% accuracy
+- Métricas: 91% accuracy
 - Ejemplo de clasificación
 - Estadísticas de ejemplo
 
@@ -258,7 +258,7 @@ Backend:
 - Next.js 16.2.4 (Framework web)
 - Node.js (Runtime)
 - TypeScript (Type-safe code)
-- Sentiment 5.0.0 (NLP)
+- Natural 8.x (Machine Learning NLP)
 
 Frontend:
 - React 19.2.4 (UI)
@@ -280,16 +280,16 @@ Herramientas:
 
 ```
 Entrada:
-├─ Positivos: "amazing", "love", "excellent", etc.
-├─ Negativos: "terrible", "hate", "awful", etc.
-└─ Neutrales: "okay", "average", "decent", etc.
+├─ Positivos: "increíble", "encanta", "excelente", etc.
+├─ Negativos: "terrible", "pérdida", "horrible", etc.
+└─ Neutrales: "bien", "promedio", "decente", etc.
 
 Salida:
 ├─ Total procesados: 15
 ├─ Positivos: 5 (33%)
 ├─ Negativos: 5 (33%)
 ├─ Neutrales: 5 (33%)
-└─ Accuracy: 95%
+└─ Accuracy: 91%
 ```
 
 ---
