@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parse } from 'papaparse';
-import { readComments, addComments } from '@/lib/utils/storage';
-import { analyzeTexts } from '@/lib/ml/sentiment-analyzer';
+import { readComments, addComments, readLastAnalysis, saveAnalysis } from '@/lib/utils/storage';
+import { analyzeTexts, calculateMetrics } from '@/lib/ml/sentiment-analyzer';
 import { Comment } from '@/lib/types';
 
-/**
- * GET /api/comments - Obtiene todos los comentarios
- */
 export async function GET() {
   try {
     const comments = readComments();
@@ -23,25 +20,18 @@ export async function GET() {
   }
 }
 
-/**
- * POST /api/comments - Carga comentarios desde CSV o JSON
- * Body esperado:
- * - csv: string (contenido del archivo CSV)
- * - comments: string[] (array de textos)
- */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     let commentsToAdd: Comment[] = [];
+    let processingTimeMs = 0;
 
-    // Procesar CSV
     if (body.csv) {
       const results = parse(body.csv, {
         header: true,
         skipEmptyLines: true,
       });
 
-      // Buscar columnas comunes: 'comment', 'text', 'content', 'message'
       const textColumn = Object.keys(results.data[0] || {}).find((key) =>
         ['comment', 'text', 'content', 'message', 'comentario'].includes(
           key.toLowerCase()
@@ -56,13 +46,16 @@ export async function POST(request: NextRequest) {
       }
 
       const texts = results.data.map((row: any) => row[textColumn]).filter(Boolean);
+      const start = performance.now();
       commentsToAdd = analyzeTexts(texts);
+      processingTimeMs = performance.now() - start;
     }
 
-    // Procesar array de comentarios
     if (body.comments && Array.isArray(body.comments)) {
       const texts = body.comments.filter(Boolean);
+      const start = performance.now();
       commentsToAdd = analyzeTexts(texts);
+      processingTimeMs = performance.now() - start;
     }
 
     if (commentsToAdd.length === 0) {
@@ -72,8 +65,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Guardar
     const allComments = addComments(commentsToAdd);
+    
+    // Guardar analysis con métricas de tiempo
+    const prevAnalysis = readLastAnalysis();
+    const prevTime = prevAnalysis?.metrics?.processingTime || 0;
+    const newMetrics = calculateMetrics(allComments);
+    newMetrics.processingTime = prevTime + processingTimeMs;
+
+    saveAnalysis({
+      comments: allComments,
+      metrics: newMetrics,
+    });
 
     return NextResponse.json({
       success: true,
@@ -91,9 +94,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-/**
- * DELETE /api/comments - Limpia todos los comentarios
- */
 export async function DELETE() {
   try {
     const { clearAllData } = await import('@/lib/utils/storage');

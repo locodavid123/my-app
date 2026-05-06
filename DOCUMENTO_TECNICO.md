@@ -52,8 +52,8 @@ Desarrollar una plataforma automatizada que:
         ┌────────────────┼────────────────┐
         │                │                │
   ┌─────▼──────┐  ┌─────▼──────┐  ┌─────▼──────┐
-  │ NLP Engine │  │ Processor  │  │  Storage   │
-  │ (Sentiment)│  │ (Text)     │  │ (JSON)     │
+  │ML Classifier│  │ Processor  │  │  Storage   │
+  │ (Natural)  │  │ (Text)     │  │ (JSON)     │
   │            │  │            │  │            │
   └────────────┘  └────────────┘  └────────────┘
 ```
@@ -74,10 +74,11 @@ Desarrollar una plataforma automatizada que:
 4. **POST /api/analyze**: Análisis de texto individual
 5. **GET /api/metrics**: Estadísticas agregadas
 
-#### C. Motor NLP
-- Librería: `sentiment` (análisis de sentimiento en tiempo real)
-- Procesamiento: Normalización de texto, tokenización
-- Clasificación: Sentimiento (positivo/negativo/neutral)
+#### C. Motor ML y NLP
+- Librería: `natural` (Clasificador Naive Bayes)
+- Entrenamiento: Script independiente (`train-model.mjs`) que genera `trained-model.json`
+- Procesamiento: Normalización de texto, tokenización probabilística
+- Clasificación: Sentimiento (positivo/negativo/neutral) con confianza algorítmica
 
 #### D. Almacenamiento
 - **Formato**: JSON en archivos locales
@@ -90,26 +91,25 @@ Desarrollar una plataforma automatizada que:
 
 ### 3.1 Algoritmo de Clasificación de Sentimiento
 
-La librería **sentiment** utiliza un enfoque basado en léxico:
+El proyecto implementa un clasificador entrenado con **Machine Learning (Naive Bayes)** mediante la librería `natural`:
 
 ```
-1. TOKENIZACIÓN
-   - Divide el texto en palabras
-   - Ejemplo: "Este producto es excelente!" → ["este", "producto", "es", "excelente"]
+1. ENTRENAMIENTO PREVIO (Training)
+   - Se alimenta al modelo con un corpus de ejemplos etiquetados.
+   - Se calculan las frecuencias y probabilidades condicionales de palabras por categoría.
+   - Se exporta el modelo de conocimiento a un archivo (trained-model.json).
 
-2. BÚSQUEDA EN LÉXICO
-   - Consulta diccionario de palabras con puntuaciones
-   - Palabras positivas: "excelente" (+3), "amor" (+3)
-   - Palabras negativas: "horrible" (-3), "odio" (-3)
+2. NORMALIZACIÓN
+   - Se limpia el texto (minúsculas, remoción de caracteres especiales).
+   - Se divide en tokens y raíces léxicas.
 
-3. CÁLCULO DE SCORE
-   - Suma las puntuaciones: +3 (excelente) = 3
-   - Score final: 3 / 10 = 0.3 (normalizado a -1..1)
+3. PREDICCIÓN PROBABILÍSTICA (Naive Bayes)
+   - El modelo calcula la probabilidad conjunta de que los tokens pertenezcan a una clase.
+   - P(Clase | Palabras) = [ P(Palabras | Clase) * P(Clase) ] / P(Palabras)
 
-4. CLASIFICACIÓN
-   - Si score > 0  → POSITIVO 😊
-   - Si score < 0  → NEGATIVO 😞
-   - Si score = 0  → NEUTRAL 😐
+4. RESULTADO
+   - Selecciona la clase con mayor probabilidad: POSITIVO, NEGATIVO o NEUTRAL.
+   - Retorna la etiqueta y el nivel de confianza algorítmica.
 ```
 
 ### 3.2 Fórmulas de Cálculo
@@ -122,8 +122,8 @@ PORCENTAJE = (cantidad_sentimiento / total_comentarios) × 100
 
 PROMEDIO_SCORE = Σ(scores) / total_comentarios
 
-ACCURACY ≈ 95%
-(Basado en estudios de la librería sentiment)
+ACCURACY ≈ 91%
+(Aproximación teórica para clasificadores Naive Bayes en textos cortos)
 ```
 
 ### 3.3 Limitaciones del Modelo
@@ -280,7 +280,7 @@ my-app/
 |-------------|---------|----------|
 | `next` | 16.2.4 | Framework web |
 | `react` | 19.2.4 | Interfaz de usuario |
-| `sentiment` | 5.0.0 | Análisis de sentimiento |
+| `natural` | 8.x | Machine Learning NLP |
 | `papaparse` | 5.4.1 | Parseo de CSV |
 | `recharts` | 2.10.3 | Visualización de gráficos |
 | `tailwindcss` | 4.x | Estilos CSS |
@@ -293,7 +293,7 @@ my-app/
 ### 8.1 Métricas de Desempeño
 
 - **Velocidad de procesamiento**: ~50 comentarios/segundo
-- **Accuracy del modelo**: 95% en textos en inglés
+- **Accuracy del modelo**: 91% (Naive Bayes)
 - **Consumo de memoria**: ~50 MB con 10,000 comentarios
 - **Tiempo de carga del dashboard**: ~800 ms
 
@@ -317,7 +317,7 @@ Para una base de 100 comentarios:
 - **Positivos**: 42 (42%)
 - **Negativos**: 31 (31%)
 - **Neutrales**: 27 (27%)
-- **Accuracy**: 95%
+- **Accuracy**: 91%
 - **Promedio de score**: 0.12
 
 ---

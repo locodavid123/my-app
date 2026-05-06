@@ -1,23 +1,34 @@
-import Sentiment from 'sentiment';
+import natural from 'natural';
+import fs from 'fs';
+import path from 'path';
 import { Comment } from '../types';
 
-const sentiment = new Sentiment();
+let classifier: natural.BayesClassifier | null = null;
 
-/**
- * Normaliza el texto para análisis
- */
+function loadClassifier() {
+  if (classifier) return classifier;
+  try {
+    const modelPath = path.join(process.cwd(), 'data', 'trained-model.json');
+    if (fs.existsSync(modelPath)) {
+      const modelData = JSON.parse(fs.readFileSync(modelPath, 'utf8'));
+      classifier = natural.BayesClassifier.restore(modelData, natural.PorterStemmerEs);
+    } else {
+      classifier = new natural.BayesClassifier(natural.PorterStemmerEs);
+    }
+  } catch (error) {
+    classifier = new natural.BayesClassifier(natural.PorterStemmerEs);
+  }
+  return classifier;
+}
+
 export function normalizeText(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s]/g, '') // Remove special characters
-    .replace(/\s+/g, ' '); // Normalize whitespace
+    .replace(/[^\w\s]/g, '')
+    .replace(/\s+/g, ' ');
 }
 
-/**
- * Clasifica el sentimiento de un texto
- * Retorna: positive (score > 0), negative (score < 0), neutral (score = 0)
- */
 export function classifySentiment(
   text: string
 ): {
@@ -25,40 +36,40 @@ export function classifySentiment(
   score: number;
   confidence: number;
 } {
-  const result = sentiment.analyze(text);
-  const normalizedScore = Math.min(Math.max(result.score / 10, -1), 1);
+  const model = loadClassifier();
+  
+  let sentiment: 'positive' | 'negative' | 'neutral' = 'neutral';
+  let confidenceScore = 0;
 
-  let classification: 'positive' | 'negative' | 'neutral';
-  if (result.score > 0) {
-    classification = 'positive';
-  } else if (result.score < 0) {
-    classification = 'negative';
-  } else {
-    classification = 'neutral';
+  try {
+    sentiment = model.classify(text) as 'positive' | 'negative' | 'neutral';
+    const classifications = model.getClassifications(text);
+    const topClassification = classifications.find(c => c.label === sentiment);
+    confidenceScore = topClassification ? topClassification.value : 0;
+  } catch (e) {
+    console.error("Error en clasificación ML:", e);
   }
 
-  // Calcular confianza basada en la magnitud del score
-  const confidence = Math.abs(normalizedScore);
+  let score = 0;
+  if (sentiment === 'positive') score = Math.min(1, confidenceScore * 10);
+  else if (sentiment === 'negative') score = Math.max(-1, -(confidenceScore * 10));
 
   return {
-    sentiment: classification,
-    score: normalizedScore,
-    confidence,
+    sentiment,
+    score,
+    confidence: confidenceScore,
   };
 }
 
-/**
- * Analiza un array de textos
- */
 export function analyzeTexts(texts: string[]): Comment[] {
   return texts.map((text, index) => {
     const normalized = normalizeText(text);
-    const { sentiment: sentimentLabel, score, confidence } = classifySentiment(normalized);
+    const { sentiment, score, confidence } = classifySentiment(normalized);
 
     return {
       id: `comment-${Date.now()}-${index}`,
       text,
-      sentiment: sentimentLabel,
+      sentiment,
       score,
       confidence,
       timestamp: new Date().toISOString(),
@@ -66,9 +77,6 @@ export function analyzeTexts(texts: string[]): Comment[] {
   });
 }
 
-/**
- * Calcula métricas de un conjunto de comentarios
- */
 export function calculateMetrics(comments: Comment[]) {
   const total = comments.length;
   const positive = comments.filter((c) => c.sentiment === 'positive').length;
@@ -85,6 +93,6 @@ export function calculateMetrics(comments: Comment[]) {
     negativePercentage: total > 0 ? (negative / total) * 100 : 0,
     neutralPercentage: total > 0 ? (neutral / total) * 100 : 0,
     averageScore,
-    processingTime: 0, // Will be updated by API
+    processingTime: 0,
   };
 }

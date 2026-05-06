@@ -58,7 +58,8 @@ Las siguientes métricas se actualizan automáticamente:
 - 😊 Positivos (%)
 - 😞 Negativos (%)
 - 😐 Neutrales (%)
-- ✅ Accuracy del modelo (95%)
+- ⏱️ Tiempo de procesamiento (ms)
+- ✅ Accuracy del modelo (91%)
 
 ### 4️⃣ Filtrar y Ordenar
 
@@ -75,7 +76,7 @@ Frontend (Next.js + React)
         ↓
 API Routes (Node.js)
         ↓
-NLP Engine (Sentiment)
+ML & NLP Engine (Natural)
         ↓
 Storage (JSON)
 ```
@@ -162,7 +163,8 @@ Obtiene estadísticas agregadas
     "negativePercentage": 31.0,
     "neutralPercentage": 27.0,
     "averageScore": 0.12,
-    "accuracy": 95
+    "processingTime": 145.2,
+    "accuracy": 91
   }
 }
 ```
@@ -207,7 +209,7 @@ my-app/
 | **Next.js 16** | Framework web full-stack |
 | **React 19** | UI interactiva |
 | **TypeScript** | Type-safety |
-| **Sentiment** | Análisis de sentimiento (NLP) |
+| **Natural** | Machine Learning NLP (Naive Bayes) |
 | **PapaParse** | Parseo de CSV |
 | **Recharts** | Visualización de datos |
 | **Tailwind CSS** | Estilos responsivos |
@@ -223,7 +225,7 @@ my-app/
 │ Positivos: 42 (42%)  😊                 │
 │ Negativos: 31 (31%)  😞                 │
 │ Neutrales: 27 (27%)  😐                 │
-│ Accuracy: 95%        ✅                 │
+│ Accuracy: 91%        ✅                 │
 └─────────────────────────────────────────┘
 ```
 
