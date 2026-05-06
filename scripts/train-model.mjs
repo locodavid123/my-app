@@ -55,6 +55,26 @@ const trainData = [
   { text: 'esta fenomenal', label: 'positive' },
   { text: 'super', label: 'positive' },
   { text: 'genial', label: 'positive' },
+  { text: 'agradable', label: 'positive' },
+  { text: 'feliz', label: 'positive' },
+  { text: 'justo', label: 'positive' },
+  { text: 'delicioso', label: 'positive' },
+  { text: 'sin problemas', label: 'positive' },
+  { text: 'resolvió', label: 'positive' },
+  { text: 'resuelto', label: 'positive' },
+  { text: 'excelente', label: 'positive' },
+  { text: 'gusto', label: 'positive' },
+  { text: 'gustó', label: 'positive' },
+  { text: 'me gusto', label: 'positive' },
+  { text: 'me gustó', label: 'positive' },
+  { text: 'encantó', label: 'positive' },
+  { text: 'agradó', label: 'positive' },
+  { text: 'buen servicio', label: 'positive' },
+  { text: 'rápido', label: 'positive' },
+  { text: 'rapido', label: 'positive' },
+  { text: '10/10', label: 'positive' },
+  { text: '10', label: 'positive' },
+  { text: 'perfecto', label: 'positive' },
   
   // SLANG Y EXPRESIONES COLOMBIANAS POSITIVAS
   { text: 'que epico', label: 'positive' },
@@ -99,6 +119,27 @@ const trainData = [
   { text: 're mal', label: 'negative' },
   { text: 'muy mal hecho', label: 'negative' },
   { text: 'no sirve para nada', label: 'negative' },
+  
+  // PALABRAS CLAVE DIRECTAS NEGATIVAS
+  { text: 'aburrida', label: 'negative' },
+  { text: 'aburrido', label: 'negative' },
+  { text: 'problema', label: 'negative' },
+  { text: 'no resolvió', label: 'negative' },
+  { text: 'frustrado', label: 'negative' },
+  { text: 'frustrante', label: 'negative' },
+  { text: 'tardaron', label: 'negative' },
+  { text: 'tardó', label: 'negative' },
+  { text: 'lento', label: 'negative' },
+  { text: 'enojado', label: 'negative' },
+  { text: 'estoy enojado', label: 'negative' },
+  { text: 'estoy muy enojado', label: 'negative' },
+  { text: 'molesto', label: 'negative' },
+  { text: 'estoy molesto', label: 'negative' },
+  { text: 'furioso', label: 'negative' },
+  { text: 'nervios', label: 'negative' },
+  { text: 'nervioso', label: 'negative' },
+  { text: 'miedo', label: 'negative' },
+  { text: 'susto', label: 'negative' },
 
   // SLANG Y EXPRESIONES COLOMBIANAS NEGATIVAS
   { text: 'que video tan re paila socio', label: 'negative' },
@@ -142,6 +183,8 @@ const trainData = [
   { text: 'que mas', label: 'neutral' },
   { text: 'ahi mas o menos', label: 'neutral' },
   { text: 'todo normal', label: 'neutral' },
+  { text: 'raro', label: 'neutral' },
+  { text: 'empatado', label: 'neutral' },
 ];
 
 // Añadir todo al modelo

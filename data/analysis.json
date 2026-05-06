@@ -1,12 +1,12 @@
 {
   "comments": [
     {
-      "id": "comment-1778096940148-0",
-      "text": "esta fenomenal",
+      "id": "comment-1778102338243-0",
+      "text": "me gusto el servicio",
       "sentiment": "positive",
-      "score": 0.6269654088050314,
-      "confidence": 0.6269654088050314,
-      "timestamp": "2026-05-06T19:49:00.148Z"
+      "score": 0.7047088842495941,
+      "confidence": 0.7047088842495941,
+      "timestamp": "2026-05-06T21:18:58.243Z"
     }
   ],
   "metrics": {
@@ -17,7 +17,7 @@
     "positivePercentage": 100,
     "negativePercentage": 0,
     "neutralPercentage": 0,
-    "averageScore": 0.6269654088050314,
-    "processingTime": 144.79760000000533
+    "averageScore": 0.7047088842495941,
+    "processingTime": 10.423900000001595
   }
 }
