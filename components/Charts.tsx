@@ -36,8 +36,8 @@ export const Charts: React.FC<ChartsProps> = ({ metrics }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       {/* Pie Chart */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
-        <h3 className="text-lg font-bold mb-4 text-slate-800 dark:text-slate-100">
+      <div className="bg-white p-6 rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100">
+        <h3 className="text-lg font-bold mb-4 text-slate-800">
           📊 Distribución de Sentimientos
         </h3>
         <ResponsiveContainer width="100%" height={300}>
@@ -63,8 +63,8 @@ export const Charts: React.FC<ChartsProps> = ({ metrics }) => {
       </div>
 
       {/* Bar Chart */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
-        <h3 className="text-lg font-bold mb-4 text-slate-800 dark:text-slate-100">
+      <div className="bg-white p-6 rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-100">
+        <h3 className="text-lg font-bold mb-4 text-slate-800">
           📈 Porcentaje por Sentimiento
         </h3>
         <ResponsiveContainer width="100%" height={300}>

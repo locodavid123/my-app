@@ -6,5 +6,109 @@
     "score": 0.7047088842495941,
     "confidence": 0.7047088842495941,
     "timestamp": "2026-05-06T21:18:58.243Z"
+  },
+  {
+    "id": "comment-1778207888898-0",
+    "text": "hello",
+    "sentiment": "positive",
+    "score": 0.42682926829268286,
+    "confidence": 0.42682926829268286,
+    "timestamp": "2026-05-08T02:38:08.898Z"
+  },
+  {
+    "id": "comment-1778720727635-0",
+    "text": "Que bonito dia",
+    "sentiment": "negative",
+    "score": -0.5,
+    "confidence": 0.5,
+    "timestamp": "2026-05-14T01:05:27.635Z"
+  },
+  {
+    "id": "comment-1778720743149-0",
+    "text": "te odio",
+    "sentiment": "negative",
+    "score": -0.6666666666666666,
+    "confidence": 0.6666666666666666,
+    "timestamp": "2026-05-14T01:05:43.149Z"
+  },
+  {
+    "id": "comment-1778720753113-0",
+    "text": "que lindo",
+    "sentiment": "positive",
+    "score": 0.42682926829268286,
+    "confidence": 0.42682926829268286,
+    "timestamp": "2026-05-14T01:05:53.113Z"
+  },
+  {
+    "id": "comment-1778720759826-0",
+    "text": "bonito",
+    "sentiment": "positive",
+    "score": 0.42682926829268286,
+    "confidence": 0.42682926829268286,
+    "timestamp": "2026-05-14T01:05:59.826Z"
+  },
+  {
+    "id": "comment-1778720767041-0",
+    "text": "que bonito",
+    "sentiment": "positive",
+    "score": 0.42682926829268286,
+    "confidence": 0.42682926829268286,
+    "timestamp": "2026-05-14T01:06:07.041Z"
+  },
+  {
+    "id": "comment-1778720774351-0",
+    "text": "Que buen dia hace",
+    "sentiment": "neutral",
+    "score": 0,
+    "confidence": 0.7805369214957149,
+    "timestamp": "2026-05-14T01:06:14.351Z"
+  },
+  {
+    "id": "comment-1778720781692-0",
+    "text": "Que bonito dia hace",
+    "sentiment": "neutral",
+    "score": 0,
+    "confidence": 0.5836035201482167,
+    "timestamp": "2026-05-14T01:06:21.692Z"
+  },
+  {
+    "id": "comment-1778720790315-0",
+    "text": "muy buenos dias",
+    "sentiment": "neutral",
+    "score": 0,
+    "confidence": 0.641139804096171,
+    "timestamp": "2026-05-14T01:06:30.315Z"
+  },
+  {
+    "id": "comment-1778720797227-0",
+    "text": "hola",
+    "sentiment": "neutral",
+    "score": 0,
+    "confidence": 0.5000000000000001,
+    "timestamp": "2026-05-14T01:06:37.227Z"
+  },
+  {
+    "id": "comment-1778720805107-0",
+    "text": "buen dia",
+    "sentiment": "neutral",
+    "score": 0,
+    "confidence": 0.44593877189877895,
+    "timestamp": "2026-05-14T01:06:45.107Z"
+  },
+  {
+    "id": "comment-1778720812229-0",
+    "text": "sapa",
+    "sentiment": "positive",
+    "score": 0.42682926829268286,
+    "confidence": 0.42682926829268286,
+    "timestamp": "2026-05-14T01:06:52.229Z"
+  },
+  {
+    "id": "comment-1778720818123-0",
+    "text": "fea",
+    "sentiment": "positive",
+    "score": 0.42682926829268286,
+    "confidence": 0.42682926829268286,
+    "timestamp": "2026-05-14T01:06:58.123Z"
   }
 ]

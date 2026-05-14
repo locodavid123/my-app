@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { classifySentiment, normalizeText } from '@/lib/ml/sentiment-analyzer';
 
-/**
- * POST /api/analyze - Analiza un texto individual
- * Body: { text: string }
- */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -17,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     const normalizedText = normalizeText(body.text);
-    const result = classifySentiment(normalizedText);
+    const result = await classifySentiment(normalizedText);
 
     return NextResponse.json({
       success: true,

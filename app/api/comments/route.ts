@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parse } from 'papaparse';
-import { readComments, addComments, readLastAnalysis, saveAnalysis } from '@/lib/utils/storage';
-import { analyzeTexts, calculateMetrics } from '@/lib/ml/sentiment-analyzer';
+import { readComments, addComments, saveAnalysis, clearAllData } from '@/lib/utils/storage';
+import { analyzeTexts, calculateMetrics, getModelAccuracy } from '@/lib/ml/sentiment-analyzer';
 import { Comment } from '@/lib/types';
+import { CSV_TEXT_COLUMNS, MAX_CSV_SIZE_MB } from '@/lib/constants';
+
+const MAX_CSV_SIZE_BYTES = MAX_CSV_SIZE_MB * 1024 * 1024;
 
 export async function GET() {
   try {
-    const comments = readComments();
+    const comments = await readComments();
     return NextResponse.json({
       success: true,
       data: comments,
       count: comments.length,
     });
   } catch (error) {
+    console.error('Error in GET /api/comments:', error);
     return NextResponse.json(
       { success: false, error: 'Error fetching comments' },
       { status: 500 }
@@ -27,15 +31,21 @@ export async function POST(request: NextRequest) {
     let processingTimeMs = 0;
 
     if (body.csv) {
+      // Validar tamaño del CSV en el servidor
+      if (body.csv.length > MAX_CSV_SIZE_BYTES) {
+        return NextResponse.json(
+          { success: false, error: `El archivo CSV excede el tamaño máximo de ${MAX_CSV_SIZE_MB}MB` },
+          { status: 400 }
+        );
+      }
+
       const results = parse(body.csv, {
         header: true,
         skipEmptyLines: true,
       });
 
       const textColumn = Object.keys(results.data[0] || {}).find((key) =>
-        ['comment', 'text', 'content', 'message', 'comentario'].includes(
-          key.toLowerCase()
-        )
+        CSV_TEXT_COLUMNS.includes(key.toLowerCase())
       );
 
       if (!textColumn) {
@@ -45,17 +55,17 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const texts = results.data.map((row: any) => row[textColumn]).filter(Boolean);
-      const start = performance.now();
-      commentsToAdd = analyzeTexts(texts);
-      processingTimeMs = performance.now() - start;
+      const texts = results.data.map((row: Record<string, unknown>) => row[textColumn]).filter(Boolean) as string[];
+      const start = Date.now();
+      commentsToAdd = await analyzeTexts(texts);
+      processingTimeMs = Date.now() - start;
     }
 
     if (body.comments && Array.isArray(body.comments)) {
       const texts = body.comments.filter(Boolean);
-      const start = performance.now();
-      commentsToAdd = analyzeTexts(texts);
-      processingTimeMs = performance.now() - start;
+      const start = Date.now();
+      commentsToAdd = await analyzeTexts(texts);
+      processingTimeMs = Date.now() - start;
     }
 
     if (commentsToAdd.length === 0) {
@@ -65,17 +75,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const allComments = addComments(commentsToAdd);
-    
-    // Guardar analysis con métricas de tiempo
-    const prevAnalysis = readLastAnalysis();
-    const prevTime = prevAnalysis?.metrics?.processingTime || 0;
-    const newMetrics = calculateMetrics(allComments);
-    newMetrics.processingTime = prevTime + processingTimeMs;
+    const allComments = await addComments(commentsToAdd);
 
-    saveAnalysis({
+    const freshMetrics = calculateMetrics(allComments);
+    const accuracy = await getModelAccuracy();
+    freshMetrics.processingTime = processingTimeMs;
+    freshMetrics.accuracy = accuracy > 0 ? Math.round(accuracy * 100) : 0;
+
+    await saveAnalysis({
       comments: allComments,
-      metrics: newMetrics,
+      metrics: freshMetrics,
     });
 
     return NextResponse.json({
@@ -84,6 +93,7 @@ export async function POST(request: NextRequest) {
       totalComments: allComments.length,
       newComments: commentsToAdd.length,
       data: allComments,
+      metrics: freshMetrics,
     });
   } catch (error) {
     console.error('Error in POST /api/comments:', error);
@@ -96,13 +106,13 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE() {
   try {
-    const { clearAllData } = await import('@/lib/utils/storage');
-    clearAllData();
+    await clearAllData();
     return NextResponse.json({
       success: true,
       message: 'Todos los datos han sido eliminados',
     });
   } catch (error) {
+    console.error('Error in DELETE /api/comments:', error);
     return NextResponse.json(
       { success: false, error: 'Error limpiando datos' },
       { status: 500 }

@@ -1,21 +1,18 @@
 import natural from 'natural';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
 import { Comment } from '../types';
 
 let classifier: natural.BayesClassifier | null = null;
 
-function loadClassifier() {
+async function loadClassifier(): Promise<natural.BayesClassifier> {
   if (classifier) return classifier;
   try {
     const modelPath = path.join(process.cwd(), 'data', 'trained-model.json');
-    if (fs.existsSync(modelPath)) {
-      const modelData = JSON.parse(fs.readFileSync(modelPath, 'utf8'));
-      classifier = natural.BayesClassifier.restore(modelData, natural.PorterStemmerEs);
-    } else {
-      classifier = new natural.BayesClassifier(natural.PorterStemmerEs);
-    }
-  } catch (error) {
+    await fs.access(modelPath);
+    const modelData = JSON.parse(await fs.readFile(modelPath, 'utf8'));
+    classifier = natural.BayesClassifier.restore(modelData, natural.PorterStemmerEs);
+  } catch {
     classifier = new natural.BayesClassifier(natural.PorterStemmerEs);
   }
   return classifier;
@@ -29,37 +26,33 @@ export function normalizeText(text: string): string {
     .replace(/\s+/g, ' ');
 }
 
-export function classifySentiment(
+export async function classifySentiment(
   text: string
-): {
+): Promise<{
   sentiment: 'positive' | 'negative' | 'neutral';
   score: number;
   confidence: number;
-} {
-  const model = loadClassifier();
-  
+}> {
+  const model = await loadClassifier();
+
   let sentiment: 'positive' | 'negative' | 'neutral' = 'neutral';
   let confidenceScore = 0;
 
   try {
     sentiment = model.classify(text) as 'positive' | 'negative' | 'neutral';
     const classifications = model.getClassifications(text);
-    
-    // La librería 'natural' devuelve probabilidades conjuntas muy pequeñas.
-    // Para obtener un porcentaje de confianza real (0 a 1), normalizamos los valores:
+
     const totalValue = classifications.reduce((sum, c) => sum + c.value, 0);
     const topClassification = classifications.find(c => c.label === sentiment);
-    
+
     confidenceScore = (totalValue > 0 && topClassification) ? (topClassification.value / totalValue) : 0;
   } catch (e) {
     console.error("Error en clasificación ML:", e);
   }
 
-  // Asignar el score basado en el sentimiento y la confianza normalizada
   let score = 0;
-  if (sentiment === 'positive') score = confidenceScore; // 0 a 1
-  else if (sentiment === 'negative') score = -confidenceScore; // -1 a 0
-  else score = 0; // Neutral es 0
+  if (sentiment === 'positive') score = confidenceScore;
+  else if (sentiment === 'negative') score = -confidenceScore;
 
   return {
     sentiment,
@@ -68,20 +61,22 @@ export function classifySentiment(
   };
 }
 
-export function analyzeTexts(texts: string[]): Comment[] {
-  return texts.map((text, index) => {
-    const normalized = normalizeText(text);
-    const { sentiment, score, confidence } = classifySentiment(normalized);
+export async function analyzeTexts(texts: string[]): Promise<Comment[]> {
+  const results: Comment[] = [];
+  for (let index = 0; index < texts.length; index++) {
+    const normalized = normalizeText(texts[index]);
+    const { sentiment, score, confidence } = await classifySentiment(normalized);
 
-    return {
+    results.push({
       id: `comment-${Date.now()}-${index}`,
-      text,
+      text: texts[index],
       sentiment,
       score,
       confidence,
       timestamp: new Date().toISOString(),
-    };
-  });
+    });
+  }
+  return results;
 }
 
 export function calculateMetrics(comments: Comment[]) {
@@ -101,5 +96,17 @@ export function calculateMetrics(comments: Comment[]) {
     neutralPercentage: total > 0 ? (neutral / total) * 100 : 0,
     averageScore,
     processingTime: 0,
+    accuracy: 0,
   };
+}
+
+export async function getModelAccuracy(): Promise<number> {
+  try {
+    const metricsPath = path.join(process.cwd(), 'data', 'model-metrics.json');
+    await fs.access(metricsPath);
+    const data = JSON.parse(await fs.readFile(metricsPath, 'utf8'));
+    return data.accuracy ?? 0;
+  } catch {
+    return 0;
+  }
 }

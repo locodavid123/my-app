@@ -12,20 +12,19 @@ import {
 
 interface MetricsCardProps {
   metrics: AnalysisMetrics;
-  accuracy?: number;
 }
 
 export const MetricsCard: React.FC<MetricsCardProps> = ({ 
-  metrics,
-  accuracy = 91 
+  metrics 
 }) => {
+  const accuracy = metrics.accuracy > 0 ? metrics.accuracy : 0;
+
   const cards = [
     {
       label: 'Total Procesados',
       value: metrics.totalComments,
       icon: <ChartBarIcon className="w-6 h-6 text-white" />,
       bgColor: 'bg-gradient-to-br from-blue-500 to-blue-700',
-      shadowColor: 'shadow-blue-200',
     },
     {
       label: 'Positivos',
@@ -33,7 +32,6 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
       percentage: metrics.positivePercentage.toFixed(1),
       icon: <FaceSmileIcon className="w-6 h-6 text-emerald-500" />,
       bgColor: 'bg-gradient-to-br from-emerald-500 to-teal-600',
-      shadowColor: 'shadow-emerald-200',
     },
     {
       label: 'Negativos',
@@ -41,7 +39,6 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
       percentage: metrics.negativePercentage.toFixed(1),
       icon: <FaceFrownIcon className="w-6 h-6 text-rose-500" />,
       bgColor: 'bg-gradient-to-br from-rose-500 to-red-600',
-      shadowColor: 'shadow-rose-200',
     },
     {
       label: 'Neutrales',
@@ -49,14 +46,12 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
       percentage: metrics.neutralPercentage.toFixed(1),
       icon: <ScaleIcon className="w-6 h-6 text-slate-500" />,
       bgColor: 'bg-gradient-to-br from-slate-500 to-slate-700',
-      shadowColor: 'shadow-slate-200',
     },
     {
       label: 'Accuracy',
       value: `${accuracy}%`,
       icon: <SparklesIcon className="w-6 h-6 text-violet-500" />,
       bgColor: 'bg-gradient-to-br from-violet-500 to-purple-700',
-      shadowColor: 'shadow-violet-200',
     },
   ];
 

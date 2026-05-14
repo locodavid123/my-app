@@ -4,6 +4,34 @@ import React, { useState } from 'react';
 import { Comment } from '@/lib/types';
 import { FaceSmileIcon, FaceFrownIcon, ScaleIcon } from '@heroicons/react/24/solid';
 
+const PAGE_SIZE = 25;
+
+function getSentimentIcon(sentiment: string) {
+  switch (sentiment) {
+    case 'positive':
+      return <FaceSmileIcon className="w-4 h-4 inline-block mr-1" />;
+    case 'negative':
+      return <FaceFrownIcon className="w-4 h-4 inline-block mr-1" />;
+    case 'neutral':
+      return <ScaleIcon className="w-4 h-4 inline-block mr-1" />;
+    default:
+      return null;
+  }
+}
+
+function getSentimentColor(sentiment: string) {
+  switch (sentiment) {
+    case 'positive':
+      return 'bg-emerald-500 text-white shadow-sm shadow-emerald-200';
+    case 'negative':
+      return 'bg-rose-500 text-white shadow-sm shadow-rose-200';
+    case 'neutral':
+      return 'bg-slate-400 text-white shadow-sm shadow-slate-200';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+}
+
 interface CommentsTableProps {
   comments: Comment[];
 }
@@ -11,6 +39,7 @@ interface CommentsTableProps {
 export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
   const [sortBy, setSortBy] = useState<'score' | 'sentiment' | 'date'>('date');
   const [filter, setFilter] = useState<'all' | 'positive' | 'negative' | 'neutral'>('all');
+  const [page, setPage] = useState(0);
 
   const filtered = comments.filter((c) => filter === 'all' || c.sentiment === filter);
 
@@ -24,31 +53,13 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
     }
   });
 
-  const getSentimentIcon = (sentiment: string) => {
-    switch (sentiment) {
-      case 'positive':
-        return <FaceSmileIcon className="w-4 h-4 inline-block mr-1" />;
-      case 'negative':
-        return <FaceFrownIcon className="w-4 h-4 inline-block mr-1" />;
-      case 'neutral':
-        return <ScaleIcon className="w-4 h-4 inline-block mr-1" />;
-      default:
-        return null;
-    }
-  };
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages - 1);
 
-  const getSentimentColor = (sentiment: string) => {
-    switch (sentiment) {
-      case 'positive':
-        return 'bg-emerald-500 text-white shadow-sm shadow-emerald-200';
-      case 'negative':
-        return 'bg-rose-500 text-white shadow-sm shadow-rose-200';
-      case 'neutral':
-        return 'bg-slate-400 text-white shadow-sm shadow-slate-200';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const paginated = sorted.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE);
+
+  const getSentimentIconFn = getSentimentIcon;
+  const getSentimentColorFn = getSentimentColor;
 
   return (
     <div className="bg-white/60 backdrop-blur-md p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/60 relative overflow-hidden">
@@ -67,7 +78,7 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
           </label>
           <select
             value={filter}
-            onChange={(e) => setFilter(e.target.value as any)}
+            onChange={(e) => { setFilter(e.target.value as 'all' | 'positive' | 'negative' | 'neutral'); setPage(0); }}
             className="px-3 py-2 border border-slate-200 bg-white/80 text-slate-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
           >
             <option value="all">Todos</option>
@@ -83,7 +94,7 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
           </label>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as 'score' | 'sentiment' | 'date')}
             className="px-3 py-2 border border-slate-200 bg-white/80 text-slate-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
           >
             <option value="date">Más Recientes</option>
@@ -93,7 +104,7 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
         </div>
 
         <div className="text-sm font-medium text-slate-500 flex items-end pb-2">
-          Mostrando {sorted.length} de {comments.length} comentarios
+          Mostrando {paginated.length} de {sorted.length} comentarios
         </div>
       </div>
 
@@ -117,25 +128,25 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
             </tr>
           </thead>
           <tbody>
-            {sorted.length === 0 ? (
+            {paginated.length === 0 ? (
               <tr>
                 <td colSpan={4} className="text-center py-8 text-slate-500 font-medium">
                   No hay comentarios que mostrar
                 </td>
               </tr>
             ) : (
-              sorted.map((comment) => (
+              paginated.map((comment) => (
                 <tr
                   key={comment.id}
                   className="border-b border-slate-100 hover:bg-white/60 transition-colors"
                 >
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wide ${getSentimentColor(
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wide ${getSentimentColorFn(
                         comment.sentiment
                       )}`}
                     >
-                      {getSentimentIcon(comment.sentiment)} {comment.sentiment}
+                      {getSentimentIconFn(comment.sentiment)} {comment.sentiment}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-slate-800 font-medium max-w-xs truncate">
@@ -148,7 +159,7 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
                     <div className="w-16 h-2.5 bg-slate-200 rounded-full overflow-hidden mx-auto shadow-inner border border-slate-300/50">
                       <div
                         className="h-full bg-gradient-to-r from-sky-400 to-indigo-500 rounded-full"
-                        style={{ width: `${comment.confidence * 100}%` }}
+                        style={{ width: `${Math.round(comment.confidence * 100)}%` }}
                       />
                     </div>
                   </td>
@@ -158,6 +169,31 @@ export const CommentsTable: React.FC<CommentsTableProps> = ({ comments }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
+          <p className="text-xs font-medium text-slate-500">
+            Página {safePage + 1} de {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPage(Math.max(0, safePage - 1))}
+              disabled={safePage === 0}
+              className="px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            >
+              Anterior
+            </button>
+            <button
+              onClick={() => setPage(Math.min(totalPages - 1, safePage + 1))}
+              disabled={safePage >= totalPages - 1}
+              className="px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

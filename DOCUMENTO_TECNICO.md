@@ -147,23 +147,40 @@ El entrenamiento del modelo de Machine Learning se realiza a través de un scrip
 ### 3.4 Fórmulas de Cálculo
 
 ```
-CONFIANZA = |score| 
-(Rango: 0 a 1, mayor = más confianza)
+CONFIANZA = valor_clase_ganadora / suma_total_valores
+(Rango: 0 a 1, normalizado de probabilidades conjuntas)
 
 PORCENTAJE = (cantidad_sentimiento / total_comentarios) × 100
 
 PROMEDIO_SCORE = Σ(scores) / total_comentarios
 
-ACCURACY ≈ 91%
-(Aproximación teórica para clasificadores Naive Bayes en textos cortos)
+ACCURACY = correctos / total_test
+(Calculado sobre split 80/20 con 98 muestras de prueba)
 ```
 
-### 3.5 Limitaciones del Modelo
+### 3.5 Métricas Reales del Modelo
 
-- **Análisis léxico**: No detecta sarcasmo
-- **Contexto**: No entiende el significado completo de construcciones irónicas o frases complejas
-- **Idioma**: Optimizado específicamente para español (no evaluará correctamente textos en inglés u otros idiomas)
-- **Emojis**: No reconoce la información emocional que aportan los caracteres especiales o emojis
+Evaluado con train/test split 80/20 sobre **489 ejemplos** etiquetados manualmente:
+
+| Clase | Precision | Recall | F1-Score |
+|-------|-----------|--------|----------|
+| Positivo | 0.63 | 0.61 | 0.62 |
+| Negativo | 0.67 | 0.59 | 0.63 |
+| Neutral | 0.61 | 0.71 | 0.66 |
+
+- **Accuracy global**: 63.3%
+- **Test samples**: 98 (20% del dataset)
+- **Correctos**: 62/98
+- **Dataset**: 489 ejemplos balanceados en español colombiano
+
+### 3.6 Limitaciones del Modelo
+
+- **Tamaño del dataset**: 489 ejemplos (mejorable con más datos)
+- **Análisis léxico**: No detecta sarcasmo ni ironía
+- **Contexto**: No entiende el significado completo de frases complejas o negaciones elaboradas
+- **Idioma**: Optimizado para español (no evaluará correctamente textos en inglés u otros idiomas)
+- **Emojis**: No reconoce la información emocional de emojis o caracteres especiales
+- **Clase neutral**: Es la más difícil de clasificar (F1: 0.66), dado que comparte vocabulario con positivas y negativas
 
 ---
 
@@ -324,8 +341,9 @@ my-app/
 
 ### 8.1 Métricas de Desempeño
 
-- **Velocidad de procesamiento**: ~50 comentarios/segundo
-- **Accuracy del modelo**: 91% (Naive Bayes)
+- **Velocidad de procesamiento**: ~30-50 comentarios/segundo (depende del hardware)
+- **Accuracy del modelo**: 63.3% (medido con split 80/20 sobre 98 muestras)
+- **Dataset de entrenamiento**: 489 ejemplos etiquetados manualmente en español colombiano
 - **Consumo de memoria**: ~50 MB con 10,000 comentarios
 - **Tiempo de carga del dashboard**: ~800 ms
 
@@ -339,18 +357,18 @@ my-app/
   "sentiment": "positive",
   "score": 0.78,
   "confidence": 0.78,
-  "timestamp": "2024-04-21T15:30:45Z"
+  "timestamp": "2025-05-14T00:57:00Z"
 }
 ```
 
 ### 8.3 Estadísticas de Ejemplo
 
-Para una base de 100 comentarios:
-- **Positivos**: 42 (42%)
-- **Negativos**: 31 (31%)
-- **Neutrales**: 27 (27%)
-- **Accuracy**: 91%
-- **Promedio de score**: 0.12
+Para una base de 100 comentarios de muestra:
+- **Positivos**: ~40 (40%)
+- **Negativos**: ~30 (30%)
+- **Neutrales**: ~30 (30%)
+- **Accuracy del modelo**: 63.3%
+- **Promedio de score**: variable según distribución
 
 ---
 
@@ -358,22 +376,25 @@ Para una base de 100 comentarios:
 
 ### 9.1 Limitaciones Actuales
 
-1. **Base de datos**: Usa JSON en archivos (no escala a millones)
-2. **Análisis**: Solo en español principalmente
+1. **Base de datos**: Usa JSON en archivos (no escala a millones de registros)
+2. **Análisis**: Solo en español, con precisión limitada en textos neutrales
 3. **Sarcasmo**: No se detecta correctamente
 4. **Multiidioma**: Requiere reentrenar modelos específicos por idioma
+5. **Concurrencia**: Sin bloqueo de escritura, requests simultáneos pueden causar inconsistencias
+6. **Dataset**: 489 ejemplos (un modelo profesional requeriría 10,000+)
 
 ### 9.2 Mejoras Futuras (Roadmap)
 
-- [ ] Migrar a base de datos PostgreSQL
-- [ ] Implementar modelos avanzados (BERT, GPT)
-- [ ] Soporte multiidioma (español, francés, etc.)
-- [ ] Análisis de emojis y caras
+- [ ] Migrar a base de datos PostgreSQL con Prisma ORM
+- [ ] Ampliar dataset a 10,000+ ejemplos con datos reales de redes sociales
+- [ ] Implementar modelos avanzados (BERT, GPT para español)
+- [ ] Soporte multiidioma (inglés, portugués)
+- [ ] Análisis de emojis y expresiones con signos de puntuación
 - [ ] Exportar datos a Excel/PDF
-- [ ] API REST pública
-- [ ] Autenticación de usuarios
-- [ ] Sistema de alertas por sentimiento
-- [ ] Predicción de tendencias
+- [ ] API REST pública con autenticación
+- [ ] Sistema de alertas por tendencia de sentimiento
+- [ ] Migrar I/O a streaming para archivos grandes
+- [ ] Implementar cola de procesamiento para batch operations
 
 ---
 
@@ -405,16 +426,19 @@ Para una base de 100 comentarios:
 ## 11. Conclusiones
 
 Esta plataforma demuestra:
-✅ Procesamiento automático de textos a escala
-✅ Aplicación práctica de NLP
-✅ Arquitectura moderna con Next.js
-✅ Visualización interactiva de datos
-✅ Interfaz amigable y responsiva
+✅ Procesamiento automático de textos con NLP en español
+✅ Clasificación Naive Bayes con accuracy real medido (63.3%)
+✅ Dataset balanceado de 489 ejemplos en español colombiano
+✅ Arquitectura moderna con Next.js 16 + React 19 + TypeScript
+✅ Visualización interactiva de datos con Recharts
+✅ Interfaz amigable, responsiva y con paginación
+✅ Validación de entradas con feedback visual de errores
+✅ API REST documentada con manejo de errores
 
-La solución es escalable y puede procesarse en diferentes escenarios como análisis de redes sociales, feedback de clientes, reseñas de productos, etc.
+La solución es funcional para análisis a escala moderada (miles de comentarios). Para escalar a millones, se recomienda migrar el almacenamiento a PostgreSQL e implementar procesamiento asíncrono con colas.
 
 ---
 
-**Documento creado**: Abril 21, 2024
-**Versión**: 1.0
+**Documento creado**: Mayo 14, 2025
+**Versión**: 2.0 (Actualizado con métricas reales)
 **Autor**: Equipo de Desarrollo

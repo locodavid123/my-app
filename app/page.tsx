@@ -17,17 +17,12 @@ const DEFAULT_METRICS: AnalysisMetrics = {
   neutralPercentage: 0,
   averageScore: 0,
   processingTime: 0,
+  accuracy: 0,
 };
 
 export default function Home() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [metrics, setMetrics] = useState<AnalysisMetrics>(DEFAULT_METRICS);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Cargar datos al montar el componente
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const loadData = async () => {
     try {
@@ -50,20 +45,25 @@ export default function Home() {
     }
   };
 
-  const handleFileChange = async (newComments: Comment[]) => {
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadData();
+  }, []);
+
+  const handleFileChange = (newComments: Comment[], newMetrics: AnalysisMetrics) => {
     setComments(newComments);
-    // Recargar métricas después de agregar comentarios
-    setTimeout(loadData, 500);
+    setMetrics(newMetrics);
   };
 
-  const handleClearData = () => {
+  const handleClearData = async () => {
     if (confirm('¿Estás seguro de que deseas eliminar todos los datos?')) {
-      fetch('/api/comments', { method: 'DELETE' })
-        .then(() => {
-          setComments([]);
-          setMetrics(DEFAULT_METRICS);
-        })
-        .catch(console.error);
+      try {
+        await fetch('/api/comments', { method: 'DELETE' });
+        setComments([]);
+        setMetrics(DEFAULT_METRICS);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -108,10 +108,10 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10 flex flex-col gap-8">
         {/* File Upload */}
-        <FileUpload onFileChange={handleFileChange} isLoading={isLoading} />
+        <FileUpload onFileChange={handleFileChange} />
 
         {/* Metrics */}
-        <MetricsCard metrics={metrics} accuracy={metrics.accuracy || 91} />
+        <MetricsCard metrics={metrics} />
 
         {/* Charts */}
         {comments.length > 0 && <Charts metrics={metrics} />}

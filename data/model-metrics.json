@@ -1,0 +1,40 @@
+{
+  "accuracy": 0.6327,
+  "totalTestSamples": 98,
+  "correctPredictions": 62,
+  "trainedAt": "2026-05-14T01:14:11.734Z",
+  "confusionMatrix": {
+    "positive": {
+      "positive": 22,
+      "negative": 6,
+      "neutral": 8
+    },
+    "negative": {
+      "positive": 9,
+      "negative": 20,
+      "neutral": 5
+    },
+    "neutral": {
+      "positive": 4,
+      "negative": 4,
+      "neutral": 20
+    }
+  },
+  "perClass": {
+    "positive": {
+      "precision": 0.63,
+      "recall": 0.61,
+      "f1": 0.62
+    },
+    "negative": {
+      "precision": 0.67,
+      "recall": 0.59,
+      "f1": 0.63
+    },
+    "neutral": {
+      "precision": 0.61,
+      "recall": 0.71,
+      "f1": 0.66
+    }
+  }
+}
